@@ -22,7 +22,7 @@ type User={id:string,email?:string,name?:string};
 type Context={circles:Circle[];currentCircle:Circle|undefined;currentPersonId:string;mode:'demo'|'cloud'|'signed-out';ready:boolean;loading:boolean;error:string|null;user:User|null;configured:boolean;onboardingReady:boolean;resetDemo:()=>void;invitePending:boolean;recovery:boolean;updatePassword:(password:string)=>Promise<void>;setCircle:(id:string)=>void;enterDemo:()=>void;switchPerson:(id:string)=>void;signIn:(email:string,password:string)=>Promise<void>;signUp:(name:string,email:string,password:string)=>Promise<void>;resetPassword:(email:string)=>Promise<void>;signOut:()=>Promise<void>;createCircle:(name:string)=>Promise<void>;addPerson:(name:string)=>Promise<void>;addEntry:(entry:EntryInput)=>Promise<void>;confirmPayment:(id:string)=>Promise<void>;voidEntry:(id:string)=>Promise<void>;addRecurring:(r:RecurringInput)=>Promise<void>;toggleRecurring:(id:string)=>Promise<void>;createInvite:(id:string)=>Promise<string>;clearError:()=>void;refresh:()=>Promise<void>};
 const TabbyContext=createContext<Context|null>(null);
 export function TabbyProvider({children}:{children:React.ReactNode}){
- const [circles,setCircles]=useState<Circle[]>(readDemo);const [circleId,setCircleId]=useState(()=>localStorage.getItem(LOCAL_CIRCLE)||'family');const [demoPerson,setDemoPerson]=useState('you');const [mode,setMode]=useState<Context['mode']>('demo');const [user,setUser]=useState<User|null>(null);const [recovery,setRecovery]=useState(false);const [ready,setReady]=useState(false);const [loading,setLoading]=useState(false);const [error,setError]=useState<string|null>(null);const busy=useRef(false);const authVersion=useRef(0);const inviteAcceptance=useRef<Promise<string>|null>(null);
+ const [circles,setCircles]=useState<Circle[]>(()=>cloud?[]:readDemo());const [circleId,setCircleId]=useState(()=>localStorage.getItem(LOCAL_CIRCLE)||'family');const [demoPerson,setDemoPerson]=useState('you');const [mode,setMode]=useState<Context['mode']>(cloud?'signed-out':'demo');const [user,setUser]=useState<User|null>(null);const [recovery,setRecovery]=useState(false);const [ready,setReady]=useState(false);const [loading,setLoading]=useState(false);const [error,setError]=useState<string|null>(null);const busy=useRef(false);const authVersion=useRef(0);const inviteAcceptance=useRef<Promise<string>|null>(null);
  const invite=useRef(new URLSearchParams(location.hash.slice(1)).get('invite')||sessionStorage.getItem('tabby-invite')||'');
  if(invite.current)sessionStorage.setItem('tabby-invite',invite.current);
  const currentCircle=circles.find(c=>c.id===circleId)||circles[0];
@@ -32,7 +32,7 @@ export function TabbyProvider({children}:{children:React.ReactNode}){
  async function load(){const version=authVersion.current;const data=await requireCloud().loadCircles();if(version===authVersion.current)setCircles(data);}
  async function useSession(session:any){
   const version=++authVersion.current;
-  if(!session){setUser(null);setMode(invite.current?'signed-out':'demo');setCircles(readDemo());setReady(true);return;}
+  if(!session){setUser(null);setRecovery(false);setMode('signed-out');setCircles([]);setReady(true);return;}
   setUser({id:session.user.id,email:session.user.email,name:session.user.user_metadata?.display_name||session.user.user_metadata?.name||session.user.email?.split('@')[0]});
   setMode('cloud');
   try{

@@ -163,6 +163,17 @@ async function mountAuth({invite='',initial=null,load=async()=>[privateCircle],a
 }
 async function emitAuth(ctl,event,value){await act(async()=>{for(const cb of ctl.listeners)cb(event,value);});}
 
+test('a signed-out live visitor sees sign-in and can opt into demo separately',async()=>{
+ await mountAuth();
+ assert.equal(latest.mode,'signed-out');
+ assert.equal(latest.currentCircle,undefined);
+ assert.ok(document.querySelector('#auth-email'));
+ assert.ok(document.body.textContent.includes('Welcome to the circle.'));
+ await act(async()=>latest.enterDemo());
+ assert.equal(latest.mode,'demo');
+ assert.equal(latest.currentCircle.name,'Test family');
+});
+
 test('sign-in uses auth events only and accepts an invitation once across duplicate events',async()=>{
  const inviteResult=deferred();const ctl=await mountAuth({invite:'a'.repeat(64),accept:()=>inviteResult.promise});
  assert.equal(latest.mode,'signed-out');
@@ -190,7 +201,7 @@ test('a delayed background refresh cannot repopulate live data after sign-out',a
  // A refresh is a foreground action; auth sign-out can occur in another tab.
  await emitAuth(ctl,'SIGNED_OUT',null);
  await act(async()=>{loading.resolve([privateCircle]);await refreshed;});
- assert.equal(latest.mode,'demo');assert.equal(latest.currentCircle.name,'Test family');
+ assert.equal(latest.mode,'signed-out');assert.equal(latest.currentCircle,undefined);
  assert.equal(document.body.textContent.includes('Private live household'),false);
 });
 

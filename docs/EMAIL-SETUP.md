@@ -2,11 +2,13 @@
 
 The app is published at https://bbgaming132.github.io/tabby/. The database schema and private-circle authorization are installed. Family account creation is not release-verified yet.
 
-Dashboard inspection on November 21, 2026 confirmed custom SMTP is off, the default Site URL is `http://localhost:3000`, and the authentication redirect list is empty. The app displays an account-email setup notice during signup and password recovery.
+Tabby opens to sign-in for live accounts. The demo is available from the sign-in page.
 
 ## Login callback
 
-Add exactly `https://bbgaming132.github.io/tabby/` under Authentication → URL Configuration → Redirect URLs. This authorizes that controlled app URL to receive login and recovery redirects. It has been entered in the dashboard dialog but not saved, pending explicit confirmation of the authentication destination. Preserve the shared project's other settings and any existing application URLs; do not replace its global Site URL just for Tabby.
+The exact URL `https://bbgaming132.github.io/tabby/` is saved under Authentication → URL Configuration → Redirect URLs in the shared Supabase project.
+
+Gmail SMTP is enabled, but a live signup test returned an email delivery error. Supabase logged an SMTP 535 authentication rejection. Replace the credential with a fresh Google App Password from the account used as the SMTP username before retesting signup.
 
 ## Free sender option
 
