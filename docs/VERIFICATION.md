@@ -30,13 +30,15 @@ Source publication and GitHub Pages deployment were verified. The published app 
 
 - Narrow responsive layout and browser zoom were checked in Chromium. Actual iPhone Safari keyboard, safe-area, installation, and device behavior still need a physical-device smoke test.
 - Real family signup and email confirmation have not been verified. The current authentication configuration requires confirmed users (`mailer_autoconfirm` is false); do not disable that protection to bypass delivery problems.
-- Custom SMTP status is unknown. The provider’s default email service can restrict recipients, so confirm delivery to family email addresses or configure an appropriate SMTP provider.
-- The final deployed URL must be allowed in authentication redirects. Confirmation and password-recovery links require an end-to-end check on that URL.
+- Dashboard inspection confirmed custom SMTP is disabled. A sender must be configured for family confirmation and recovery emails; the default service is restricted to project-team recipients.
+- Dashboard inspection confirmed no authentication redirect URLs are configured and the default Site URL is localhost. The exact Tabby URL is prepared in the Add URL dialog but is not saved, pending confirmation of the new authentication destination. Confirmation and recovery links still need an end-to-end check.
 - Invite acceptance and payment confirmation need a final smoke test with separate real accounts after email delivery is working.
 
 ## Deliberately unavailable
 
 Bank-account linking, automatic transaction import, automatic repayment detection, money transfers, and background email/SMS/push reminders are not implemented. Recurring reminders appear in the app. [Bank connection planning](BANK-CONNECTIONS.md) describes the researched integration and release requirements without representing it as a working feature.
+
+See [email setup](EMAIL-SETUP.md) for the remaining configuration and free sender option.
 
 ## Reproduce
 
