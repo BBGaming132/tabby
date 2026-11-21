@@ -13,6 +13,8 @@ Recorded November 21, 2026. This document distinguishes implementation checks fr
 | Dependency audit | Zero reported vulnerabilities | After upgrading Vite to pinned version 6.4.6; this is a point-in-time audit |
 | SQL security tests | Passed against the installed live schema | Transactional test fixtures rolled back; zero test fixtures left afterward |
 | Desktop browser | Expense creation observed | A $10.01 expense split equally among four people saved correctly; the other three shares total $7.50 |
+| Narrow browser / zoom | Published app tested at 340 CSS px and 400% zoom | No horizontal overflow; expense dialog remained within viewport; visible text inputs/selects were at least 16px; an $11.11 expense saved correctly |
+| GitHub Pages | Build and deployment succeeded | [Published app](https://bbgaming132.github.io/tabby/); initial workflow run 44912032428 passed build and deploy |
 
 The live security checks include circle isolation, denied anonymous access and direct writes, invitation acceptance/replay restrictions, sender/recipient payment permissions, validated splits, and recurring-post deduplication. The recurring uniqueness rule was corrected and retested. Test transactions were rolled back after verification.
 
@@ -22,11 +24,11 @@ The additive Tabby database schema is installed in the existing free `jarvis-kit
 
 The GitHub source repository is [BBGaming132/tabby](https://github.com/BBGaming132/tabby). Its Pages workflow runs the tests and production build before deployment. The workflow contains this installation’s public client configuration, with optional repository-variable overrides. Public client configuration does not grant access around database authorization.
 
-At the time of this record, final source publication and GitHub Pages deployment verification were pending. Confirm the workflow’s deployment result and returned URL before reporting the site as published.
+Source publication and GitHub Pages deployment were verified. The published app loaded successfully over HTTPS. Anonymous REST requests to Tabby ledger and member tables returned HTTP 401 as intended.
 
 ## Remaining live release checks
 
-- Mobile browser verification is pending. The DOM test suite does not replace phone-sized visual and interaction checks.
+- Narrow responsive layout and browser zoom were checked in Chromium. Actual iPhone Safari keyboard, safe-area, installation, and device behavior still need a physical-device smoke test.
 - Real family signup and email confirmation have not been verified. The current authentication configuration requires confirmed users (`mailer_autoconfirm` is false); do not disable that protection to bypass delivery problems.
 - Custom SMTP status is unknown. The provider’s default email service can restrict recipients, so confirm delivery to family email addresses or configure an appropriate SMTP provider.
 - The final deployed URL must be allowed in authentication redirects. Confirmation and password-recovery links require an end-to-end check on that URL.

@@ -23,6 +23,7 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
+          VITE_ONBOARDING_READY: ${{ vars.VITE_ONBOARDING_READY || 'false' }}
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://mbfhrsknavphptxyonwh.supabase.co' }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_bbjjGJvwF0bseNtP4mjhHw_l3R5pYkA' }}
       - uses: actions/upload-pages-artifact@v3

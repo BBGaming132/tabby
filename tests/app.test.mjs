@@ -16,7 +16,7 @@ await build({
   stdin: { contents: `export { default as App } from './src/App'; export { TabbyProvider, useTabby } from './src/store';`, resolveDir: process.cwd(), loader: 'tsx' },
   bundle: true, format: 'esm', platform: 'node', outfile: runtimeFile,
   external: ['react', 'react-dom', 'react-dom/client'], loader: { '.css': 'empty' },
-  define: { 'import.meta.env.VITE_SUPABASE_URL': 'undefined', 'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': 'undefined' },
+  define: { 'import.meta.env.VITE_ONBOARDING_READY': 'undefined', 'import.meta.env.VITE_SUPABASE_URL': 'undefined', 'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': 'undefined' },
   jsx: 'automatic', logLevel: 'silent',
 });
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://tabby.test/', pretendToBeVisual: true });
@@ -134,7 +134,7 @@ const authRuntimeFile=path.join(generated,'auth-runtime.mjs');
 await build({
  stdin:{contents:`export { default as App } from './src/App'; export { TabbyProvider, useTabby } from './src/store';`,resolveDir:process.cwd(),loader:'tsx'},
  bundle:true,format:'esm',platform:'node',outfile:authRuntimeFile,external:['react','react-dom','react-dom/client'],loader:{'.css':'empty'},jsx:'automatic',logLevel:'silent',
- define:{'import.meta.env.VITE_SUPABASE_URL':'"https://mock.test"','import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY':'"publishable-test"'},
+ define:{'import.meta.env.VITE_ONBOARDING_READY':'undefined','import.meta.env.VITE_SUPABASE_URL':'"https://mock.test"','import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY':'"publishable-test"'},
  plugins:[{name:'fake-cloud-boundary',setup(b){b.onResolve({filter:/^\.\/cloud$/},()=>({path:'mock-cloud',namespace:'qa'}));b.onLoad({filter:/.*/,namespace:'qa'},()=>({loader:'js',contents:`
  const ctl=()=>globalThis.__tabbyCloudControl;
  export class Cloud {
